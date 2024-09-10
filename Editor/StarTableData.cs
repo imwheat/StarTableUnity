@@ -59,12 +59,15 @@ namespace KFrame.StarTable
         /// </summary>
         public float LatestVisitGUIWidth = -1f;
         /// <summary>
+        /// 图标放大比例
+        /// </summary>
+        public float IconSizeRatio = 1.0f;
+        /// <summary>
         /// 桌面上的Asset
         /// </summary>
         public List<StarTableGUI> AssetOnTable;
 
         #endregion
-
 
         #region 初始化相关
 
@@ -155,8 +158,10 @@ namespace KFrame.StarTable
             //遍历加载每个Asset
             foreach (StarTableGUI tableGUI in AssetOnTable)
             {
+                //获取Object和对应的图标
                 tableGUI.AssetObj =
                     AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(tableGUI.GUID));
+                tableGUI.Icon = AssetPreview.GetMiniThumbnail(tableGUI.AssetObj);
             }
         }
         

@@ -46,10 +46,6 @@ namespace KFrame.StarTable
         /// </summary>
         public int TableIndex;
         /// <summary>
-        /// 上一个手动放置的位置
-        /// </summary>
-        public Vector2 PrevPlacePos;
-        /// <summary>
         /// 在桌面上的Rect
         /// </summary>
         public Rect TableRect;
@@ -61,6 +57,7 @@ namespace KFrame.StarTable
         /// <summary>
         /// 绘制区域的Rect
         /// </summary>
+        [NonSerialized]
         public Rect DrawRect;
         /// <summary>
         /// GUI的绘制类型
@@ -73,6 +70,7 @@ namespace KFrame.StarTable
         /// <summary>
         /// GUI显示的Icon
         /// </summary>
+        [NonSerialized]
         public Texture Icon;
         /// <summary>
         /// 图标显示区域

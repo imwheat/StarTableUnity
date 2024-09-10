@@ -34,7 +34,7 @@ namespace KFrame.StarTable
         /// <summary>
         /// 点击空白处显示的菜单项
         /// </summary>
-        private readonly IReadOnlyCollection<string> clickSpaceOptions = new[] { "刷新"};
+        private readonly IReadOnlyCollection<string> clickSpaceOptions = new[] { "刷新", "小图标", "中图标", "大图标"};
         /// <summary>
         /// 点击桌面GUI显示的菜单项
         /// </summary>
@@ -127,10 +127,15 @@ namespace KFrame.StarTable
         /// 桌面区域
         /// </summary>
         private Rect tableRect;
+
         /// <summary>
         /// 图标放大比例
         /// </summary>
-        private float iconSizeRatio = 1.0f;
+        private float iconSizeRatio
+        {
+            get => data.IconSizeRatio;
+            set => data.IconSizeRatio = value;
+        }
         /// <summary>
         /// 图标尺寸
         /// </summary>
@@ -180,14 +185,7 @@ namespace KFrame.StarTable
             //更新桌面区域
             tableRect = new Rect(latestVisitGUIWidth + MStyle.lineWidth, 0,
                 position.width - (latestVisitGUIWidth + MStyle.lineWidth), position.height);
-            int tRowCount = Mathf.FloorToInt((tableRect.width - MStyle.iconSpace) / IconSize);
-            //如果桌面每行图标数量发生变化，那就更细桌面
-            if (tRowCount != tableRowCount)
-            {
-                tableRowCount = tRowCount;
-                UpdateTable();
-                
-            }
+            UpdateTableIconCount();
             
             //更新存档的GUI宽度
             data.LatestVisitGUIWidth = latestVisitGUIWidth;
@@ -222,15 +220,27 @@ namespace KFrame.StarTable
         #endregion
 
         #region 桌面相关
-
+        
+        /// <summary>
+        /// 更新桌面图标行数量
+        /// </summary>
+        private void UpdateTableIconCount()
+        {
+            int tRowCount = Mathf.FloorToInt((tableRect.width - MStyle.iconSpace) / (IconSize + MStyle.iconSpace));
+            //如果桌面每行图标数量发生变化，那就更细桌面
+            if (tRowCount != tableRowCount)
+            {
+                tableRowCount = tRowCount;
+                UpdateTable();
+            }
+        }
         /// <summary>
         /// 创建桌面GUI
         /// </summary>
         /// <param name="asset">要放到桌面上的Asset</param>
         /// <param name="placeIndex">放置的位置的下标</param>
-        /// <param name="autoPlace">自动放置</param>
         /// <returns>新建的GUI</returns>
-        private StarAssetGUI CreateTableGUI(Object asset, int placeIndex, bool autoPlace)
+        private StarAssetGUI CreateTableGUI(Object asset, int placeIndex)
         {
             //如果为空直接返回null
             if (asset == null) return null;
@@ -242,10 +252,6 @@ namespace KFrame.StarTable
             Rect placeRect = GetIconRect(placeIndex);
             gui.TableRect = placeRect;
             gui.UpdateRect(new Rect(placeRect.position + tableRect.position, placeRect.size));
-            if (!autoPlace)
-            {
-                gui.PrevPlacePos = placeRect.position;
-            }
             
             //存进数据然后保存
             data.AssetOnTable.Add(gui);
@@ -261,7 +267,9 @@ namespace KFrame.StarTable
             //遍历更新Rect
             foreach (StarTableGUI assetGUI in data.AssetOnTable)
             {
-                assetGUI.UpdateRect(GetIconRect(assetGUI.TableIndex));
+                Rect assetTableRect = GetIconRect(assetGUI.TableIndex);
+                assetGUI.TableRect = assetTableRect;
+                assetGUI.UpdateRect(new Rect(assetTableRect.position + tableRect.position, assetTableRect.size));
             }
         }
         /// <summary>
@@ -275,7 +283,7 @@ namespace KFrame.StarTable
             if (i % tableRowCount == 0) return true;
             
             //其他的检测是否在屏幕内
-            return GetIconRect(i).xMax <= position.width;
+            return GetIconRect(i).xMax <= tableRect.width;
         }
         /// <summary>
         /// 获取Icon的Rect根据鼠标位置
@@ -352,23 +360,25 @@ namespace KFrame.StarTable
             
             Rect rect = new Rect(0, 0, latestVisitGUIWidth, LabelHeight);
             EditorGUI.LabelField(rect,"最近访问");
-            
-            for (int i = 0; i < data.VisitLatestList.Count; i++)
+
+            if (Event.current.type == EventType.Repaint)
             {
-                rect.y += StarGUIStyle.spacing + LabelHeight;
-                
-                //如果超出绘制区域了，那就中断绘制
-                if (rect.y + LabelHeight > position.height)
+                for (int i = 0; i < data.VisitLatestList.Count; i++)
                 {
-                    break;
-                }
+                    rect.y += StarGUIStyle.spacing + LabelHeight;
                 
-                StarAssetGUI assetGUI = data.VisitLatestList[i];
-                if (Event.current.type == EventType.Repaint)
-                {
+                    //如果超出绘制区域了，那就中断绘制
+                    if (rect.y + LabelHeight > position.height)
+                    {
+                        break;
+                    }
+                
+                    StarAssetGUI assetGUI = data.VisitLatestList[i];
                     assetGUI.DrawAssetOptionGUI(rect);
+
                 }
             }
+
             
             EditorGUILayout.EndVertical();
 
@@ -390,7 +400,7 @@ namespace KFrame.StarTable
             for (int i = 0; i < data.AssetOnTable.Count; i++)
             {
                 data.AssetOnTable[i].DrawAssetOptionGUI(new Rect(tableRect.position + data.AssetOnTable[i].TableRect.position,
-                    data.AssetOnTable[i].TableRect.size));
+                    new Vector2(IconSize, IconSize)));
             }
         }
         /// <summary>
@@ -479,7 +489,33 @@ namespace KFrame.StarTable
                 PopupWindow.Show(new Rect(mousePos, windowSize), new StarGUIPopupWindow(clickSpaceOptions,
                     (x) =>
                     {
-                        RepaintWindow();
+                        switch (x)
+                        {
+                            case "刷新":
+                                RepaintWindow();
+                                break;
+                            case "小图标":
+                                //更新图片缩放储存，更新GUI并保存数据
+                                iconSizeRatio = 0.5f;
+                                UpdateTableIconCount();
+                                StarTableSystem.SaveData();
+                                RepaintWindow();
+                                break;
+                            case "中图标":
+                                //更新图片缩放储存，更新GUI并保存数据
+                                iconSizeRatio = 1.0f;
+                                UpdateTableIconCount();
+                                StarTableSystem.SaveData();
+                                RepaintWindow();
+                                break;
+                            case "大图标":
+                                //更新图片缩放储存，更新GUI并保存数据
+                                iconSizeRatio = 1.5f;
+                                UpdateTableIconCount();
+                                StarTableSystem.SaveData();
+                                RepaintWindow();
+                                break;
+                        }
                     }));
             }
             else if (gui is StarTableGUI)
@@ -569,8 +605,19 @@ namespace KFrame.StarTable
                     //然后如果拖拽的物品只有一个
                     if (DragAndDrop.objectReferences.Length == 1)
                     {
-                        //那就把Asset创建并添加到鼠标选择的位置
-                        CreateTableGUI(DragAndDrop.objectReferences[0], GetIconRectIndex(mousePos), false);
+                        //记录原先已经有的下标
+                        HashSet<int> k = new HashSet<int>();
+                        foreach (StarTableGUI gui in data.AssetOnTable)
+                        {
+                            k.Add(gui.TableIndex);
+                        }
+                        //那就把Asset创建并添加到鼠标选择的位置，如果放置位置已经有Asset了，那就更新id直到未被占用
+                        int index = GetIconRectIndex(mousePos);
+                        while (k.Contains(index))
+                        {
+                            index++;
+                        }
+                        CreateTableGUI(DragAndDrop.objectReferences[0], index);
                     }
                     else
                     {
@@ -592,7 +639,7 @@ namespace KFrame.StarTable
                             }
                             k.Add(j);
                             //然后创建添加
-                            CreateTableGUI(draggedObject, j,true);
+                            CreateTableGUI(draggedObject, j);
                             
                         }
                     }

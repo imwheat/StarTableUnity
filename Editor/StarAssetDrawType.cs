@@ -9,6 +9,7 @@ namespace KFrame.StarTable
     /// <summary>
     /// Asset的GUI的绘制类型的枚举
     /// </summary>
+    [System.Serializable]
     public enum StarAssetDrawType
     {
         /// <summary>
