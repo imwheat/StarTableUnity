@@ -201,7 +201,7 @@ namespace KFrame.StarTable
                     //显示图标
                     GUI.Box(iconRect, Icon);
                     //显示名称
-                    GUI.Label(labelRect, tableLabel, StarGUIStyle.labelNormalStyle);
+                    GUI.Label(labelRect, tableLabel, StarGUIStyle.LabelStyle);
                     
                     break;
             }

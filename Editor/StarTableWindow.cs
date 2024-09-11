@@ -66,7 +66,7 @@ namespace KFrame.StarTable
         /// <summary>
         /// 检测拖拽的时间间隔，如果按住时间小于时间间隔就不算拖拽
         /// </summary>
-        private const float CheckDragInterval = 0.3f;
+        private const float CheckDragInterval = 0.4f;
         /// <summary>
         /// 检测拖拽的计时器
         /// </summary>
