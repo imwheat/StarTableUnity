@@ -34,9 +34,9 @@ namespace KFrame.StarTable
         {
             //先获取data，没有的话那就新建
             string jsonData = "";
-            if (EditorPrefs.HasKey(StarTableData.SaveKey))
+            if (PlayerPrefs.HasKey(StarTableData.SaveKey))
             {
-                jsonData = EditorPrefs.GetString(StarTableData.SaveKey);
+                jsonData = PlayerPrefs.GetString(StarTableData.SaveKey);
             }
             data = JsonUtility.FromJson<StarTableData>(jsonData);
             if (data == null)
@@ -52,7 +52,8 @@ namespace KFrame.StarTable
         /// </summary>
         public static void SaveData()
         {
-            EditorPrefs.SetString(StarTableData.SaveKey, JsonUtility.ToJson(data));
+            PlayerPrefs.SetString(StarTableData.SaveKey, JsonUtility.ToJson(data));
+            PlayerPrefs.Save();
         }
         
         [UnityEditor.Callbacks.OnOpenAsset(-100)]
