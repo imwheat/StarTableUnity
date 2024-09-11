@@ -46,6 +46,10 @@ namespace KFrame.StarTable
         /// </summary>
         public int TableIndex;
         /// <summary>
+        /// 在桌面上显示的Label
+        /// </summary>
+        private string tableLabel;
+        /// <summary>
         /// 在桌面上的Rect
         /// </summary>
         public Rect TableRect;
@@ -88,6 +92,7 @@ namespace KFrame.StarTable
             AssetObj = obj;
             GUID = guid;
             Name = name;
+            tableLabel = Name;
             Icon = AssetPreview.GetMiniThumbnail(obj);
         }
         public StarAssetGUI(Object obj) : this(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(obj)), obj.name, obj)
@@ -95,9 +100,26 @@ namespace KFrame.StarTable
 
         }
         /// <summary>
-        /// 更新Rect
+        /// 更新label显示
         /// </summary>
-        public void UpdateRect(Rect drawRect)
+        public void UpdateLabel()
+        {
+            int rowFontCount = Mathf.FloorToInt(DrawRect.width / 12f);
+            tableLabel = Name[0].ToString();
+            for (int i = 1; i < Name.Length; i++)
+            {
+                tableLabel += Name[i];
+                if (i % rowFontCount == 0)
+                {
+                    tableLabel += '\n';
+                }
+            }
+        }
+        /// <summary>
+        /// 更新Rect
+        /// <param name="updateLabel">更新字体</param>
+        /// </summary>
+        public void UpdateRect(Rect drawRect, bool updateLabel)
         {
             //如果相等那就返回
             if (drawRect == DrawRect)
@@ -134,13 +156,20 @@ namespace KFrame.StarTable
                     labelRect.yMin += StarGUIStyle.spacing * 3f + iconHeight;
                     break;
             }
+
+            if (updateLabel)
+            {
+                UpdateLabel();
+            }
+            
         }
         /// <summary>
         /// 绘制Asset选项GUI
+        /// <param name="updateLabel">更新Label</param>
         /// </summary>
-        public void DrawAssetOptionGUI(Rect drawRect)
+        public void DrawAssetOptionGUI(Rect drawRect, bool updateLabel)
         {
-            UpdateRect(drawRect);
+            UpdateRect(drawRect, updateLabel);
 
             //根据是否被选择了调整GUI颜色
             GUI.color = Selected ? StarGUIStyle.selectedColor : StarGUIStyle.unselectedColor;
@@ -172,7 +201,7 @@ namespace KFrame.StarTable
                     //显示图标
                     GUI.Box(iconRect, Icon);
                     //显示名称
-                    GUI.Label(labelRect, Name);
+                    GUI.Label(labelRect, tableLabel, StarGUIStyle.labelNormalStyle);
                     
                     break;
             }

@@ -19,6 +19,7 @@ namespace KFrame.StarTable
 #endif
         internal static readonly GUIStyle middleBackgroundStyle;
         internal static readonly GUIStyle elementBackgroundStyle;
+        internal static readonly GUIStyle labelNormalStyle;
         internal static readonly Color unselectedColor = new Color(0.6f, 0.6f, 0.6f);
         internal static readonly Color selectedColor = Color.white;
         
@@ -44,6 +45,13 @@ namespace KFrame.StarTable
             //创建一些Style提供绘制使用
             middleBackgroundStyle = new GUIStyle("RL Background");
             elementBackgroundStyle = new GUIStyle("RL Element");
+            labelNormalStyle = new GUIStyle("ControlLabel")
+            {
+                fontSize = 12,
+                alignment = TextAnchor.UpperCenter,
+            };
+
+
         }
     }
 }

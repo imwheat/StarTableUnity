@@ -15,6 +15,21 @@ namespace KFrame.StarTable
     [System.Serializable]
     public class StarTableGUI : StarAssetGUI
     {
+        #region 参数
+
+        /// <summary>
+        /// 拖拽中
+        /// </summary>
+        [NonSerialized]
+        public bool IsDragging;
+        /// <summary>
+        /// 拖拽时的Rect
+        /// </summary>
+        [NonSerialized]
+        public Rect DragRect;
+
+        #endregion
+        
         #region 构造函数
 
         public StarTableGUI(string guid, string name, Object obj) : base(guid, name, obj)

@@ -66,6 +66,11 @@ namespace KFrame.StarTable
         /// 桌面上的Asset
         /// </summary>
         public List<StarTableGUI> AssetOnTable;
+        /// <summary>
+        /// 记录桌面上已经有的id
+        /// </summary>
+        [NonSerialized]
+        public HashSet<int> TableIndexes = new HashSet<int>();
 
         #endregion
 
@@ -162,6 +167,7 @@ namespace KFrame.StarTable
                 tableGUI.AssetObj =
                     AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(tableGUI.GUID));
                 tableGUI.Icon = AssetPreview.GetMiniThumbnail(tableGUI.AssetObj);
+                TableIndexes.Add(tableGUI.TableIndex);
             }
         }
         
