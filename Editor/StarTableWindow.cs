@@ -5,9 +5,7 @@
 //* 描述：用于收藏管理、快捷访问一些asset
 //*****************************************************
 using UnityEngine;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using Object = UnityEngine.Object;
 
@@ -64,13 +62,13 @@ namespace KFrame.StarTable
         /// </summary>
         private const float CheckDoubleClickInterval = 0.2f;
         /// <summary>
-        /// 检测拖拽的时间间隔，如果按住时间小于时间间隔就不算拖拽
+        /// 检测拖拽的位移间隔，如果拖拽位于小于这个就不算拖拽
         /// </summary>
-        private const float CheckDragInterval = 0.4f;
+        private const float CheckDragDistance = 10f;
         /// <summary>
-        /// 检测拖拽的计时器
+        /// 检测拖拽的起始位点
         /// </summary>
-        private float checkDragTimer;
+        private Vector2 checkDragStartPos;
         /// <summary>
         /// 检测双击的计时器
         /// </summary>
@@ -279,7 +277,6 @@ namespace KFrame.StarTable
         /// <returns>新建的GUI</returns>
         private StarAssetGUI CreateTableGUI(Object asset, int placeIndex)
         {
-            Debug.Log(1);
             //如果为空直接返回null
             if (asset == null) return null;
             
@@ -448,8 +445,8 @@ namespace KFrame.StarTable
                     new Vector2(IconSize, IconSize)), true);
             }
             
-            //如果当前拖拽的Asset不为空那就进行绘制
-            if (curDragAsset != null)
+            //如果当前拖拽的Asset不为空且已经在拖拽了那就进行绘制
+            if (curDragAsset != null && curDragAsset.IsDragging)
             {
                 curDragAsset.DrawAssetOptionGUI(curDragAsset.DragRect, false);
             }
@@ -630,7 +627,7 @@ namespace KFrame.StarTable
                 currentEvent.Use();
             }
             //如果在拖拽Asset
-            else if (isDragging && Time.realtimeSinceStartup - checkDragTimer >= CheckDragInterval)
+            else if (isDragging && Vector2.Distance(mousePos, checkDragStartPos) >= CheckDragDistance)
             {
                 curDragAsset.IsDragging = true;
                 curDragAsset.DragRect = new Rect(mousePos - curDragAsset.TableRect.size / 2f, curDragAsset.TableRect.size);
@@ -754,7 +751,7 @@ namespace KFrame.StarTable
                             if (curSelectAsset is StarTableGUI)
                             {
                                 curDragAsset = curSelectAsset as StarTableGUI;
-                                checkDragTimer = Time.realtimeSinceStartup;
+                                checkDragStartPos = mousePos;
                                 isDragging = true;
                             }
                             currentEvent.Use();
@@ -775,12 +772,12 @@ namespace KFrame.StarTable
                     //点击Asset
                     if (currentEvent.button == 0)
                     {
-                        if (curSelectAsset != null)
+                        //是点击操作
+                        bool click = true;
+                        //如果在拖拽
+                        if (isDragging && curDragAsset != null)
                         {
-                            //是点击操作
-                            bool click = true;
-                            //如果在拖拽
-                            if (isDragging && curDragAsset != null)
+                            if (curDragAsset.IsDragging)
                             {
                                 //获取当前位置在桌面上的下标
                                 int mousePosIndex = GetIconRectIndex(mousePos);
@@ -798,32 +795,35 @@ namespace KFrame.StarTable
                                         //重绘
                                         RepaintWindow();
                                         click = false;
+                                        currentEvent.Use();
                                         //保存数据
                                         StarTableSystem.SaveData();
                                     }
                                 }
-                                
-                                //结束拖拽
-                                curDragAsset.IsDragging = false;
-                                curDragAsset = null;
-                                isDragging = false;
                             }
+
                                 
+                            //结束拖拽
+                            curDragAsset.IsDragging = false;
+                            curDragAsset = null;
+                            isDragging = false;
+                        }
+                        
+                        if (click && curSelectAsset != null)
+                        {
+                            
                             //判断是双击还是单击
-                            if (click)
+                            if (checkDoubleClick)
                             {
-                                if (checkDoubleClick)
-                                {
-                                    //双击，那就调用双击
-                                    checkDoubleClick = false;
-                                    OnMouseDoubleClick();
-                                }
-                                else
-                                {
-                                    //开始计时判断是不是双击
-                                    checkDoubleClick = true;
-                                    checkDoubleClickTimer = Time.realtimeSinceStartup;
-                                }
+                                //双击，那就调用双击
+                                checkDoubleClick = false;
+                                OnMouseDoubleClick();
+                            }
+                            else
+                            {
+                                //开始计时判断是不是双击
+                                checkDoubleClick = true;
+                                checkDoubleClickTimer = Time.realtimeSinceStartup;
                             }
    
                             currentEvent.Use();
