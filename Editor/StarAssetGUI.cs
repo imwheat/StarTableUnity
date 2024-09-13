@@ -179,7 +179,7 @@ namespace KFrame.StarTable
                     //绘制GUI背景
                     if (Event.current.type == EventType.Repaint)
                     {
-                        StarGUIStyle.elementBackgroundStyle.Draw(DrawRect, false, false, false, false);
+                        StarGUIStyle.ElementBackgroundStyle.Draw(DrawRect, false, false, false, false);
                     }
                     //显示图标
                     GUI.Box(iconRect, Icon);
@@ -193,7 +193,7 @@ namespace KFrame.StarTable
                     //绘制GUI背景
                     if (Event.current.type == EventType.Repaint)
                     {
-                        StarGUIStyle.elementBackgroundStyle.Draw(DrawRect, false, false, false, false);
+                        StarGUIStyle.ElementBackgroundStyle.Draw(DrawRect, false, false, false, false);
                     }
                     
                     //显示图标

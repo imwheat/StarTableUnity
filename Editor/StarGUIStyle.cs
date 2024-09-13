@@ -17,8 +17,8 @@ namespace KFrame.StarTable
 #else
         internal static readonly float spacing = 2.0f;
 #endif
-        internal static readonly GUIStyle middleBackgroundStyle;
-        internal static readonly GUIStyle elementBackgroundStyle;
+        private static GUIStyle middleBackgroundStyle;
+        private static GUIStyle elementBackgroundStyle;
         private static GUIStyle labelStyle;
         internal static readonly Color unselectedColor = new Color(0.6f, 0.6f, 0.6f);
         internal static readonly Color selectedColor = Color.white;
@@ -56,16 +56,31 @@ namespace KFrame.StarTable
                 return labelStyle;
             }
         }
-        
-        static StarGUIStyle()
+        internal static GUIStyle MiddleBackgroundStyle
         {
-            //创建一些Style提供绘制使用
-            middleBackgroundStyle = new GUIStyle("RL Background");
-            elementBackgroundStyle = new GUIStyle("RL Element");
-            
+            get
+            {
+                if (middleBackgroundStyle == null)
+                {
+                    middleBackgroundStyle = new GUIStyle("RL Background");
+                }
 
-
+                return middleBackgroundStyle;
+            }
         }
+        internal static GUIStyle ElementBackgroundStyle
+        {
+            get
+            {
+                if (elementBackgroundStyle == null)
+                {
+                    elementBackgroundStyle = new GUIStyle("RL Element");
+                }
+
+                return elementBackgroundStyle;
+            }
+        }
+        
     }
 }
 
