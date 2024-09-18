@@ -4,9 +4,10 @@
   "displayName": "StarTable",
   "description": "This is a game development tool",
   "unity": "2019.1",
+  "documentationUrl": "https://github.com/imwheat/StarTableUnity/",
   "author": {
     "name": "Komugi",
     "email": "little_wheat@qq.com",
-    "url": "https://space.bilibili.com/40392192"
+    "url": "https://space.bilibili.com/40392192/"
   }
 }
