@@ -11,7 +11,6 @@ using Object = UnityEngine.Object;
 
 namespace KFrame.StarTable
 {
-    [StarEditorWindow("ceshi", nameof(StarTableWindow.ShowWindow))]
     public class StarTableWindow : EditorWindow
     {
         #region 参数引用
