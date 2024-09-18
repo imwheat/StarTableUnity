@@ -1,0 +1,11 @@
+{
+  "name": "KFrame.StarTable",
+  "version": "1.0.3.3",
+  "displayName": "StarTable",
+  "description": "This is a game development tool",
+  "unity": "2021.3",
+  "author": {
+    "name": "Komugi",
+    "email": "little_wheat@qq.com"
+  }
+}
