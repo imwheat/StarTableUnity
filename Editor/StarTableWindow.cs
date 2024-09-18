@@ -800,7 +800,7 @@ namespace KFrame.StarTable
                                         //更新数据
                                         data.TableIndexes.Remove(curDragAsset.TableIndex);
                                         data.TableIndexes.Add(mousePosIndex);
-                                        curDragAsset.TableIndex = mousePosIndex;
+                                        curDragAsset.SetTableIndex(mousePosIndex);
                                         curDragAsset.TableRect = GetIconRect(mousePosIndex);
                                         //重绘
                                         RepaintWindow();

@@ -231,7 +231,14 @@ namespace KFrame.StarTable
         {
             AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(AssetObj));
         }
-
+        /// <summary>
+        /// 设置桌面id
+        /// </summary>
+        /// <param name="id">新的id</param>
+        public virtual void SetTableIndex(int id)
+        {
+            TableIndex = id;
+        }
     }
 }
 

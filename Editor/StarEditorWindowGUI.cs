@@ -46,6 +46,13 @@ namespace KFrame.StarTable
         {
             ShowWindowMethod?.Invoke(null, null);
         }
+
+        public override void SetTableIndex(int id)
+        {
+            base.SetTableIndex(id);
+            //同步更新数据的id
+            StarTableSystem.Data.EditorDataDic[EditorKey].TableIndex = id;
+        }
     }
 }
 
