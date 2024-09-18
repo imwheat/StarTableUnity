@@ -18,7 +18,7 @@ namespace KFrame.StarTable
     [InitializeOnLoad]
     public static class StarTableSystem
     {
-        public static readonly string SavePath = UnityEngine.Application.dataPath + "/StarTableData.json";
+        public static readonly string SavePath = UnityEngine.Application.persistentDataPath + "/StarTableData.json";
         /// <summary>
         /// 总的用户数据
         /// </summary>
