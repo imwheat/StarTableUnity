@@ -91,7 +91,10 @@ namespace KFrame.StarTable
             GUID = guid;
             Name = name;
             tableLabel = Name;
-            Icon = AssetPreview.GetMiniThumbnail(obj);
+            if (obj != null)
+            {
+                Icon = AssetPreview.GetMiniThumbnail(obj);
+            }
         }
         public StarAssetGUI(Object obj) : this(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(obj)), obj.name, obj)
         {

@@ -67,6 +67,15 @@ namespace KFrame.StarTable
         /// </summary>
         public List<StarTableGUI> AssetOnTable;
         /// <summary>
+        /// 桌面上的编辑器的存储数据
+        /// </summary>
+        public List<StarEditorWindowData> EditorOnTableData;
+        /// <summary>
+        /// 桌面上的编辑器的存储数据
+        /// </summary>
+        [NonSerialized]
+        public Dictionary<string, StarEditorWindowData> EditorDataDic;
+        /// <summary>
         /// 记录桌面上已经有的id
         /// </summary>
         [NonSerialized]
@@ -159,15 +168,37 @@ namespace KFrame.StarTable
             {
                 AssetOnTable = new List<StarTableGUI>();
             }
+
+            if (EditorOnTableData == null)
+            {
+                EditorOnTableData = new List<StarEditorWindowData>();
+            }
             
             //遍历加载每个Asset
-            foreach (StarTableGUI tableGUI in AssetOnTable)
+            for (int i = AssetOnTable.Count -1; i >= 0; i--)
             {
-                //获取Object和对应的图标
-                tableGUI.AssetObj =
-                    AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(tableGUI.GUID));
-                tableGUI.Icon = AssetPreview.GetMiniThumbnail(tableGUI.AssetObj);
-                TableIndexes.Add(tableGUI.TableIndex);
+                //移除里面的Editor(会在下一步完成初始化)
+                if (AssetOnTable[i].IsEditor)
+                {
+                    AssetOnTable.RemoveAt(i);
+                }
+                else
+                {
+                    StarTableGUI tableGUI = AssetOnTable[i];
+                    //获取Object和对应的图标
+                    tableGUI.AssetObj =
+                        AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(tableGUI.GUID));
+                    tableGUI.Icon = AssetPreview.GetMiniThumbnail(tableGUI.AssetObj);
+                    TableIndexes.Add(tableGUI.TableIndex);
+                }
+            }
+            
+            //初始化编辑器数据
+            //遍历每一个data然后存入字典
+            EditorDataDic = new Dictionary<string, StarEditorWindowData>();
+            foreach (StarEditorWindowData data in EditorOnTableData)
+            {
+                EditorDataDic[data.EditorKey] = data;
             }
         }
         
@@ -328,6 +359,8 @@ namespace KFrame.StarTable
                     break;
                 }
             }
+            //移除桌面占用id
+            TableIndexes.Remove(tableGUI.TableIndex);
             
             //保存删除后的数据
             StarTableSystem.SaveData();

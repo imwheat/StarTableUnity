@@ -25,6 +25,10 @@ namespace KFrame.StarTable
         /// </summary>
         [NonSerialized]
         public Rect DragRect;
+        /// <summary>
+        /// 是编辑器
+        /// </summary>
+        public bool IsEditor;
 
         #endregion
         
@@ -32,16 +36,15 @@ namespace KFrame.StarTable
 
         public StarTableGUI(string guid, string name, Object obj) : base(guid, name, obj)
         {
+            DrawType = StarAssetDrawType.Square;
+            IsEditor = false;
         }
 
         public StarTableGUI(Object obj) : base(obj)
         {
+            DrawType = StarAssetDrawType.Square;
+            IsEditor = false;
         }
-
-        #endregion
-
-        #region 重写一写操作
-        
 
         #endregion
         

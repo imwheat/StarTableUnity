@@ -11,6 +11,7 @@ using Object = UnityEngine.Object;
 
 namespace KFrame.StarTable
 {
+    [StarEditorWindow("ceshi", nameof(StarTableWindow.ShowWindow))]
     public class StarTableWindow : EditorWindow
     {
         #region 参数引用
@@ -193,11 +194,21 @@ namespace KFrame.StarTable
             lineRect = new Rect(latestVisitGUIWidth, 0, MStyle.lineWidth, position.height);
             dragLineCheckRect = new Rect(lineRect.position - new Vector2(2f, 0), lineRect.size + new Vector2(4f, 0));
             
-            //更新桌面的Rect
-            UpdateTableRect();
-            
             //更新存档的GUI宽度
             data.LatestVisitGUIWidth = latestVisitGUIWidth;
+            
+            //更新桌面的Rect
+            UpdateTableRect();
+            //遍历已有的GUI
+            foreach (StarTableGUI gui in data.AssetOnTable)
+            {
+                //如果位置没有初始化，那就初始化一下
+                if (gui.TableRect.position == Vector2.zero)
+                {
+                    gui.TableRect = GetIconRect(gui.TableIndex);
+                    gui.UpdateRect(new Rect(gui.TableRect.position + tableRect.position, gui.TableRect.size), true);
+                }
+            }
         }
         /// <summary>
         /// 更新桌面的Rect
