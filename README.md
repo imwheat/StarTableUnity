@@ -7,6 +7,7 @@
 * 打开窗口方式：调用StarTableWindow的ShowWindow既可
 * 最近访问列表：会把你最近打开的东西列在上面
 * 桌面：你可以把你想要的Asset直接拖拽放在上面
+* 添加EditorWindow：在EditorWindow的class上添加StarEditorWindowAttribute就好
 
 ### 相关链接 
 * [github](https://github.com/imwheat/StarTableUnity)
@@ -15,4 +16,4 @@
 ### 其他
 
 * 插件作者:小麦Komugi 
-* 版本:1.0.2.1
+* 版本:1.0.3.1
