@@ -163,6 +163,7 @@ namespace KFrame.StarTable
 
         #region 初始化
 
+        [MenuItem("Tools/StarTable")]
         public static void ShowWindow()
         {
             StarTableWindow window = EditorWindow.GetWindow<StarTableWindow>();
