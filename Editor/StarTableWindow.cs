@@ -36,11 +36,11 @@ namespace KFrame.StarTable
         /// <summary>
         /// 点击桌面GUI显示的菜单项
         /// </summary>
-        private readonly IReadOnlyCollection<string> clickTableGUIOptions = new[] { "打开", "从桌面上删除", "从Unity中删除"};
+        private readonly IReadOnlyCollection<string> clickTableGUIOptions = new[] { "打开", "从桌面上删除", "从Unity中删除", "在资源管理器中显示"};
         /// <summary>
         /// 点击最近访问列表GUI显示的菜单项
         /// </summary>
-        private readonly IReadOnlyCollection<string> clickVisitGUIOptions = new[] { "打开", "从Unity中删除"};
+        private readonly IReadOnlyCollection<string> clickVisitGUIOptions = new[] { "打开", "从Unity中删除", "在资源管理器中显示"};
         /// <summary>
         /// 当前选择的Asset
         /// </summary>
@@ -580,14 +580,15 @@ namespace KFrame.StarTable
                                 RepaintWindow();
                                 break;
                             case "从Unity中删除":
-
                                 if (EditorUtility.DisplayDialog("警告", "这是一项危险操作你确定要删除该文件嘛？", "确定", "取消"))
                                 {
                                     data.DeleteTableGUI(curRightMenuSelectGUI as StarTableGUI);
                                     curRightMenuSelectGUI.DeleteAsset();
                                     RepaintWindow();
                                 }
-                                
+                                break;
+                            case "在资源管理器中显示":
+                                curRightMenuSelectGUI.ShowInExplorer();
                                 break;
                         }
 
@@ -612,6 +613,9 @@ namespace KFrame.StarTable
                                 data.DeleteVisitGUI(curRightMenuSelectGUI);
                                 curRightMenuSelectGUI.DeleteAsset();
                                 RepaintWindow();
+                                break;
+                            case "在资源管理器中显示":
+                                curRightMenuSelectGUI.ShowInExplorer();
                                 break;
                         }
                         

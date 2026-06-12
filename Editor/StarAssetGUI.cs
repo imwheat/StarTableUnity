@@ -6,6 +6,7 @@
 //*****************************************************
 using UnityEngine;
 using System;
+using System.IO;
 using UnityEditor;
 using Object = UnityEngine.Object;
 
@@ -98,7 +99,6 @@ namespace KFrame.StarTable
         }
         public StarAssetGUI(Object obj) : this(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(obj)), obj.name, obj)
         {
-
         }
         /// <summary>
         /// 更新label显示
@@ -223,6 +223,22 @@ namespace KFrame.StarTable
             }
             
             AssetDatabase.OpenAsset(AssetObj);
+        }
+        /// <summary>
+        /// 在资源管理器中显示
+        /// </summary>
+        public void ShowInExplorer()
+        {
+            if (AssetObj == null)
+            {
+                EditorUtility.DisplayDialog("错误", "无法打开！该桌面图标的Asset疑似已经丢失了。", "确认");
+                return;
+            }
+            // 获取资源路径（Assets/...）
+            string assetPath = AssetDatabase.GetAssetPath(AssetObj);
+
+            // 在资源管理器中显示
+            EditorUtility.RevealInFinder(assetPath);
         }
         /// <summary>
         /// 删除Asset
